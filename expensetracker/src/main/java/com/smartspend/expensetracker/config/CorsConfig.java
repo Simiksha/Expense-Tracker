@@ -18,7 +18,7 @@ public class CorsConfig {
 
         config.setAllowedOrigins(List.of(
                 "http://localhost:5173", 
-                "https://your-netlify-app.netlify.app"
+                "https://smart-spend-expense-tracker.netlify.app/"
         ));
 
         config.setAllowedMethods(List.of(

@@ -3,6 +3,7 @@ package com.smartspend.expensetracker.service.auth;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,6 +38,12 @@ public class AuthServiceImpl implements AuthService {
         private final AuthenticationManager authenticationManager;
         private final EmailService emailService;
 
+        @Value("${app.frontend.url}")
+        private String frontendUrl;
+
+        @Value("${app.backend.url}")
+        private String backendUrl;
+
         @Override
         public MessageResponse register(RegisterRequest request) {
                 if (userRepository.existsByEmail(request.email())) {
@@ -64,7 +71,7 @@ public class AuthServiceImpl implements AuthService {
                                                 .expiryDate(LocalDateTime.now().plusHours(24))
                                                 .build());
 
-                String verificationLink = "http://localhost:8080/api/auth/verify-email?token=" + token;
+                String verificationLink = backendUrl + "/api/auth/verify-email?token=" + token;
                 System.out.println("Verification Link: " + verificationLink);
 
                 emailService.sendEmail(
@@ -131,7 +138,7 @@ public class AuthServiceImpl implements AuthService {
                                                 .expiryDate(LocalDateTime.now().plusHours(1))
                                                 .build());
 
-                String resetLink = "http://localhost:5173/reset-password?token=" + token;
+                String resetLink = frontendUrl + "/reset-password?token=" + token;
 
                 emailService.sendEmail(
                                 user.getEmail(),
